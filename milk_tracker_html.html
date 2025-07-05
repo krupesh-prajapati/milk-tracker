@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Tracker</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Milk Tracker">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+    <link rel="manifest"
+        href="data:application/json,{&quot;name&quot;:&quot;Milk Tracker&quot;,&quot;short_name&quot;:&quot;Milk&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#667eea&quot;,&quot;theme_color&quot;:&quot;#667eea&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+
+    <!-- Link to CSS file -->
+    <link rel="stylesheet" href="./milk_tracker_css.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Milk Tracker</h1>
+
+        <div class="calendar-nav">
+            <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+            <span class="month-year" id="monthYear"></span>
+            <button class="nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+
+        <div class="calendar" id="calendar"></div>
+
+        <div class="settings-section">
+            <h3>Settings</h3>
+            <div class="form-group">
+                <label for="defaultLiters">Default Liters (Auto-fill at midnight):</label>
+                <select id="defaultLiters">
+                    <option value="0.5">0.5 L</option>
+                    <option value="1" selected>1 L</option>
+                    <option value="1.5">1.5 L</option>
+                    <option value="2">2 L</option>
+                    <option value="2.5">2.5 L</option>
+                    <option value="3">3 L</option>
+                    <option value="3.5">3.5 L</option>
+                    <option value="4">4 L</option>
+                    <option value="4.5">4.5 L</option>
+                    <option value="5">5 L</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pricePerLiter">Price per Liter (₹):</label>
+                <input type="number" id="pricePerLiter" min="0" step="0.1" placeholder="Enter price per liter">
+            </div>
+            <div class="auto-fill-info">
+                ℹ️ Days without manual input will auto-fill with the default value at midnight.
+                <br><small>💾 All data is automatically saved to your browser's local storage.</small>
+            </div>
+        </div>
+
+        <div class="monthly-summary">
+            <h3>📊 Monthly Summary</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">Total Liters</div>
+                    <div class="summary-value" id="totalLiters">0 L</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Total Bill</div>
+                    <div class="summary-value" id="totalBill">₹0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Avg/Day</div>
+                    <div class="summary-value" id="avgPerDay">0 L</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Days Recorded</div>
+                    <div class="summary-value" id="daysRecorded">0</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Milk Entry</h3>
+            <p id="selectedDate"></p>
+            <div class="form-group">
+                <label for="milkLiters">Milk Liters:</label>
+                <select id="milkLiters">
+                    <option value="0">0 L</option>
+                    <option value="0.5">0.5 L</option>
+                    <option value="1">1 L</option>
+                    <option value="1.5">1.5 L</option>
+                    <option value="2">2 L</option>
+                    <option value="2.5">2.5 L</option>
+                    <option value="3">3 L</option>
+                    <option value="3.5">3.5 L</option>
+                    <option value="4">4 L</option>
+                    <option value="4.5">4.5 L</option>
+                    <option value="5">5 L</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveMilkEntry()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to JavaScript file -->
+    <script src="./milk_tracker_js.js"></script>
+</body>
+
+</html>
