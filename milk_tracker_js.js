@@ -129,7 +129,7 @@ function updateCalendar() {
         dayCell.appendChild(dayNumber);
 
         // Add milk amount if exists
-        if (milkData[dayKey]) {
+        if (milkData[dayKey] !== undefined) {
             const milkAmount = document.createElement('div');
             milkAmount.className = 'milk-amount';
             milkAmount.textContent = milkData[dayKey] + 'L';
@@ -171,7 +171,7 @@ function openEditModal(date) {
         });
 
     // Set current value or default
-    const currentValue = milkData[dateKey] || defaultLiters;
+    const currentValue = milkData[dateKey] === undefined ? 0 : milkData[dateKey];
     document.getElementById('milkLiters').value = currentValue;
 
     document.getElementById('editModal').style.display = 'block';
@@ -206,7 +206,7 @@ function autoFillMissing() {
     const yesterdayKey = formatDateKey(yesterday);
 
     // Auto-fill yesterday if no entry exists
-    if (!milkData[yesterdayKey]) {
+    if (milkData[yesterdayKey] === undefined) {
         milkData[yesterdayKey] = defaultLiters;
         saveData();
         updateCalendar();
@@ -220,10 +220,10 @@ function startAutoFillTimer() {
     setInterval(() => {
         const now = new Date();
         // Auto-fill at midnight (00:00)
-        if (now.getHours() === 0 && now.getMinutes() === 0) {
+        if (now.getHours() === 0 && now.getMinutes() < 4) {
             autoFillMissing();
         }
-    }, 60000*5); // Check 5 every minutes
+    }, 60000); // Check every minute
 
     // Also check once on startup
     autoFillMissing();
