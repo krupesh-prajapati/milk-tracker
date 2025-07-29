@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadData();
     updateCalendar();
     updateMonthlySummary();
-    startAutoFillTimer();
+    autoFillMissing();
 
     // Set up default liters change handler
     document.getElementById('defaultLiters').addEventListener('change', function () {
@@ -191,6 +191,7 @@ function saveMilkEntry() {
     const liters = parseFloat(document.getElementById('milkLiters').value);
 
     milkData[dateKey] = liters;
+    localStorage.setItem('lastUpdate', formatDateKey(selectedDate))
     saveData();
     updateCalendar();
     updateMonthlySummary();
@@ -200,33 +201,30 @@ function saveMilkEntry() {
 // Auto-fill functionality
 function autoFillMissing() {
     const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+    let lastFilledDateKey = localStorage.getItem('lastUpdate');
+    console.log(lastFilledDateKey);
 
-    const yesterdayKey = formatDateKey(yesterday);
+    if (lastFilledDateKey === null && milkData) {
+        lastFilledDateKey = Object.keys(milkData).sort((a, b) => new Date(b) - new Date(a))[0];
+    }
 
-    // Auto-fill yesterday if no entry exists
-    if (milkData[yesterdayKey] === undefined) {
-        milkData[yesterdayKey] = defaultLiters;
+    if (lastFilledDateKey) {
+        let current = new Date(lastFilledDateKey);
+        current.setDate(current.getDate() + 1);
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        while (current < yesterday) {
+            const key = formatDateKey(current);
+            if (milkData[key] === undefined) {
+                milkData[key] = defaultLiters;
+            }
+            current.setDate(current.getDate() + 1);
+        }
+        localStorage.setItem('lastUpdate', formatDateKey(yesterday))
         saveData();
         updateCalendar();
         updateMonthlySummary();
     }
-}
-
-// Start auto-fill timer
-function startAutoFillTimer() {
-    // Check for auto-fill every minute
-    setInterval(() => {
-        const now = new Date();
-        // Auto-fill at midnight (00:00)
-        if (now.getHours() === 0 && now.getMinutes() < 4) {
-            autoFillMissing();
-        }
-    }, 60000); // Check every minute
-
-    // Also check once on startup
-    autoFillMissing();
 }
 
 // Update monthly summary
